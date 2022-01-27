@@ -1,8 +1,8 @@
-import { Search, CircleClose } from '@element-plus/icons-vue'
+import { Search, ArrowRightBold } from '@element-plus/icons-vue'
 
 const icons = {
-  CircleClose,
   Search,
+  ArrowRightBold
 }
 
 export default (app) => {

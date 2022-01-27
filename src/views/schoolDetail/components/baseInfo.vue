@@ -5,40 +5,30 @@
                 <div class="info-main">
                     <div class="info-line">
                         <span class="label">院校官网:</span>
-                        <span class="value">www.aaaa.com</span>
+                        <span class="value">{{ props.schoolInfo.schoolWeb || '暂无信息' }}</span>
                     </div>
                     <div class="info-line">
                         <span class="label">院校电话:</span>
-                        <span class="value">1315644513</span>
+                        <span class="value">{{ props.schoolInfo.schoolTel || '暂无信息' }}</span>
                     </div>
                     <div class="info-line">
                         <span class="label">院校邮箱:</span>
-                        <span class="value">1646465few@163.com</span>
+                        <span class="value">{{ props.schoolInfo.schoolEmail || '暂无信息' }}</span>
                     </div>
                     <div class="info-line">
                         <span class="label">院校地址:</span>
-                        <span class="value">很费劲饿哦无法迥旺飞机沃尔夫计划hi我</span>
+                        <span class="value">{{ props.schoolInfo.schoolAddress || '暂无信息' }}</span>
                     </div>
                 </div>
             </CbCard>
 
             <CbCard class="info-card" title="院校公告">
                 <div class="notice-main">
-                    <div class="notice-list">
-                        <span class="notice-title">最新消息插本需要交100元报名费</span>
-                        <span class="notice-time">2020-07-23</span>
-                    </div>
-                    <div class="notice-list">
-                        <span class="notice-title">最新消息插本需要交100元报名费</span>
-                        <span class="notice-time">2020-07-23</span>
-                    </div>
-                    <div class="notice-list">
-                        <span class="notice-title">最新消息插本需要交100元报名费</span>
-                        <span class="notice-time">2020-07-23</span>
-                    </div>
-                    <div class="notice-list">
-                        <span class="notice-title">最新消息插本需要交100元报名费</span>
-                        <span class="notice-time">2020-07-23</span>
+                    <div class="notice-list" 
+                    v-for="(item, index) in noticeList" 
+                    :key="index + 'notice'">
+                        <span class="notice-title">{{ item.title }}</span>
+                        <span class="notice-time">{{ item.time }}</span>
                     </div>
                 </div>
             </CbCard>
@@ -46,27 +36,18 @@
     </div>
 </template>
 <script setup>
-// import { reactive } from 'vue'
 import CbCard from '@/components/cbCard.vue'
 
-// let todoList = reactive([
-//     {
-//         title: "今天要修复100个bug",
-//         status: false,
-//     },
-//     {
-//         title: "今天要修复100个bug",
-//         status: false,
-//     },
-//     {
-//         title: "今天要写100行代码加几个bug吧",
-//         status: false,
-//     },
-//     {
-//         title: "今天要修复100个bug",
-//         status: false,
-//     }
-// ])
+let props = defineProps({
+    schoolInfo: {
+        type: Object,
+        require: true
+    },
+    noticeList: {
+        type: Object,
+        require: true
+    }
+})
 </script>
 <style lang="scss" scoped>
 .base-info {

@@ -4,7 +4,11 @@
             <div class="left-box">
                 <div class="left-title">专业列表</div>
                 <el-scrollbar height="740px">
-                    <div v-for="item in 20" :key="item" class="major-list" :class="item ===  1 ? 'active' : ''">专业{{item}}</div>
+                    <div 
+                    v-for="(item, index) in props.majorList" 
+                    :key="index + 'major'" 
+                    class="major-list" 
+                    :class="item ===  1 ? 'active' : ''">{{ item.majorInfo.majorName}}</div>
                 </el-scrollbar>
             </div>
             <div class="right-box">
@@ -40,6 +44,14 @@ import {
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
 import { CanvasRenderer } from 'echarts/renderers';
+
+let props = defineProps({
+    majorList: {
+        type: Array,
+        require: true
+    }
+})
+
 
 // 注册必须的组件
 echarts.use([
@@ -97,6 +109,8 @@ onMounted(() => {
     };
     myChart.setOption(option);
 })
+
+
 
 </script>
 <style lang="scss" scoped>

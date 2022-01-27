@@ -1,9 +1,28 @@
 import request from '../request/request'
 
-export const searchSchool = schoolName => {
+// 获取院校信息
+export const getSchoolInfo = id => {
   return request({
-      url: '/school/search',
+      url: '/school/detail',
       method: 'get',
-      params: { schoolName }
+      params: { id }
+  })
+}
+
+// 获取专业列表
+export const getSchoolMajorList = query => {
+  return request({
+      url: '/schoolmajor/list',
+      method: 'get',
+      params: query
+  })
+}
+
+// 获取公告列表
+export const getNoticeList = query => {
+  return request({
+      url: '/notice/list',
+      method: 'get',
+      params: query
   })
 }

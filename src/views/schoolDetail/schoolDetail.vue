@@ -11,32 +11,33 @@
                         </div>
                     </div>
                     <div class="tag-list">
-                        <tag class="tag-item" :text="'985院校'" />
-                        <tag class="tag-item" :text="'公办院校'" />
+                        <tag class="tag-item" :text="setSchoolType(schoolInfo.schoolType)" />
+                        <tag class="tag-item" :text="setSchoolLevel(schoolInfo.schoolLevel)" />
                     </div>
                 </div>
             </div>
         </div>
         <div class="main container">
-            <base-info />
-            <major-info />
+            <base-info :schoolInfo="schoolInfo" :noticeList="noticeList" />
+            <major-info :majorList="majorList" />
         </div>
     </div>
 </template>
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Tag from '@/components/tag.vue'
 import BaseInfo from './components/baseInfo.vue'
 import MajorInfo from './components/majorInfo.vue'
 import HeaderCb from '@/components/headerCb.vue'
-import useNav from './composables/useNav'
-import { searchSchool } from '@/api/schoolDetail'
+import schoolInfoSetup from '@/setup/schoolInfoSetup'
+import { getSchoolInfo, getSchoolMajorList, getNoticeList } from '@/api/schoolDetail'
 
 const route = useRoute()
-let { currentIndex, navList, selectHandle } = useNav()
-const searchName = route.query.schoolName || ''
+const { setSchoolType, setSchoolLevel } = schoolInfoSetup()
+const schoolId = route.query.schoolId
 let schoolInfo = reactive({
+    schoolId: "",
     schoolName: "",
     schoolType: "",
     schoolLevel: "",
@@ -44,15 +45,35 @@ let schoolInfo = reactive({
     schoolLogo: '',
     schoolEmail: ''
 })
+let majorList = ref([])
+let noticeList = ref([])
 
 onMounted(() => {
-    // getSchoolInfo()
+    getSchoolInfoFn()
+    getMajorlistFn()
+    getNoticeFn()
 })
 
-const getSchoolInfo = () => {
-    searchSchool(searchName).then(res => {
+const getSchoolInfoFn = () => {
+    getSchoolInfo(schoolId).then(res => {
         if(res.code === 200) {
             Object.assign(schoolInfo, res.data)
+        }
+    })
+}
+
+const getMajorlistFn = () => {
+    getSchoolMajorList({ pageNum: 1, pageSize: 100, schoolId}).then(res => {
+        if(res.code === 200) {
+            majorList.value = res.data.rows
+        }
+    })
+}
+
+const getNoticeFn = () => {
+    getNoticeList({ pageNum: 1, pageSize: 4, schoolId}).then(res => {
+        if(res.code === 200) {
+            noticeList.value = res.data.rows
         }
     })
 }

@@ -20,6 +20,7 @@ export default {
 <style lang="scss" scoped>
 .tag {
     display: inline-block;
+    margin-right: 10px;
     background: $theme-assist-color;
     color: #fff;
     font-size: 14px;
