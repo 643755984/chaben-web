@@ -7,7 +7,7 @@
 				v-for="(item, index) in page.list" 
 				:key="index + 'school'"
 				@click="changePage(item.schoolId)">
-					<img class="item-img" src="../../assets/img/aa.jpg">
+					<img class="item-img" :src="setImgUrl(item.schoolDetailPic)">
 					<div class="tip">
 						查看详情
 						<el-icon><arrow-right-bold /></el-icon>
@@ -34,11 +34,13 @@ import { useRoute, useRouter } from 'vue-router'
 import HeaderCb from '@/components/headerCb.vue'
 import Tag from '@/components/tag.vue'
 import schoolInfoSetup from '@/setup/schoolInfoSetup'
+import setImgUrlSetup from '@/setup/setImgUrlSetup'
 import { searchSchool } from '@/api/schoolList'
 
 const route = useRoute()
 const router = useRouter()
 const { setSchoolType, setSchoolLevel } = schoolInfoSetup()
+const { setImgUrl } = setImgUrlSetup()
 let page = reactive({
 	list: [],
 	pageNum: 1,
