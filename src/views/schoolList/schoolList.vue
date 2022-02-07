@@ -1,8 +1,27 @@
 <template>
 	<div>
 		<HeaderCb />
+		<div class="fillter container">
+			<el-select v-model="page.schoolType" placeholder="选择院校类型" size="large" clearable >
+				<el-option 
+				v-for="(item, index) in schoolType" 
+				:key="index + 'type'"
+				:label="item.label" 
+				:value="item.value"></el-option>
+			</el-select>
+			<el-select style="margin-left: 20px;" v-model="page.schoolLevel" placeholder="选择院校等级" size="large" clearable >
+				<el-option 
+				v-for="(item, index) in schoolLevel" 
+				:key="index + 'level'"
+				:label="item.label"
+				:value="item.value"></el-option>
+			</el-select>
+		</div>
 		<div class="main container">
-			<div class="school-list" v-if="page.list.length !== 0">
+			<div class="no-data" v-if="page.list.length === 0">
+				找不到数据
+			</div>
+			<div class="school-list">
 				<div class="item" 
 				v-for="(item, index) in page.list" 
 				:key="index + 'school'"
@@ -19,9 +38,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="no-data" v-else>
-				找不到数据
-			</div>
+			
 		</div>
 		<div class="footer"  v-if="page.list.length !== 0">
 			<el-pagination layout="prev, pager, next" :total="page.total"></el-pagination>
@@ -29,7 +46,7 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HeaderCb from '@/components/headerCb.vue'
 import Tag from '@/components/tag.vue'
@@ -39,21 +56,25 @@ import { searchSchool } from '@/api/schoolList'
 
 const route = useRoute()
 const router = useRouter()
-const { setSchoolType, setSchoolLevel } = schoolInfoSetup()
+const { setSchoolType, setSchoolLevel, schoolType, schoolLevel } = schoolInfoSetup()
 const { setImgUrl } = setImgUrlSetup()
 let page = reactive({
+	schoolType: '',
+	schoolLevel: '',
 	list: [],
 	pageNum: 1,
 	pageSize: 10,
 	total: 0
 })
+let noData = ref(false)
 
 onMounted(() => {
-	searchSchool(route.query.schoolName).then(res => {
+	searchSchool(route.query.schoolName, page.pageNum, page.pageSize).then(res => {
 		console.log(res)
 		if(res.code === 200) {
 			page.list = res.data.rows
 			page.total = res.data.count
+			noData.value = res.noData
 		}
 	})
 })
@@ -64,6 +85,10 @@ const changePage = (schoolId) => {
 
 </script>
 <style lang="scss" scoped>
+.fillter {
+	padding: 18px 10px;
+	border-bottom: 1px solid $border-color;
+}
 .main {
 	padding: 20px 10px 10px;
 	.school-list {
@@ -71,7 +96,9 @@ const changePage = (schoolId) => {
 		flex-wrap: wrap;
 		.item {
 			position: relative;
-			margin: 0 10px 60px;
+			// margin: 0 10px 60px;
+			margin-right: 60px;
+			margin-bottom: 40px;
 			cursor: pointer;
 			overflow: hidden;
 			&::before {
@@ -118,7 +145,7 @@ const changePage = (schoolId) => {
 		}
 	}
 	.no-data {
-		font-size: 30px;
+		font-size: 24px;
 		font-weight: bold;
 		color: $text-color;
 		text-align: center;

@@ -8,17 +8,17 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/home/home.vue')
+    component: () => import(/* webpackChunkName: "Home" */ '../views/home/home.vue')
   },
   {
     path: '/school/detail',
     name: 'schoolDetail',
-    component: () => import(/* webpackChunkName: "about" */ '../views/schoolDetail/schoolDetail.vue')
+    component: () => import(/* webpackChunkName: "schoolDetail" */ '../views/schoolDetail/schoolDetail.vue')
   },
   {
     path: '/school/list',
     name: 'schoolList',
-    component: () => import(/* webpackChunkName: "about" */ '../views/schoolList/schoolList.vue')
+    component: () => import(/* webpackChunkName: "schoolList" */ '../views/schoolList/schoolList.vue')
   }
 ]
 
