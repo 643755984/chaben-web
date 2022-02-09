@@ -14,11 +14,11 @@
             <div class="right-box">
                 <div class="charts-item">
                     <div class="title">近五年人数变化</div>
-                    <div class="charts" style="width: 100%;height: 300px;"></div>
+                    <div class="charts" ref="peopleChart" style="width: 100%;height: 300px;"></div>
                 </div>
                 <div class="charts-item">
                     <div class="title">近五年分数变化</div>
-                    <div class="charts" ref="lineChart" style="width: 100%;height: 300px;"></div>
+                    <div class="charts" ref="gradeChart" style="width: 100%;height: 300px;"></div>
                 </div>
             </div>
         </div>
@@ -67,10 +67,12 @@ echarts.use([
     CanvasRenderer
 ]);
 
-let lineChart = ref(null)
+let gradeChart = ref(null)
+let peopleChart = ref(null)
 
 onMounted(() => {
-    let myChart = echarts.init(lineChart.value);
+    let myChart1 = echarts.init(gradeChart.value)
+    let myChart2 = echarts.init(peopleChart.value)
     let option = {
         legend: {
             data: ['招生人数', '录取人数']
@@ -107,7 +109,8 @@ onMounted(() => {
             }
         ]
     };
-    myChart.setOption(option);
+    myChart1.setOption(option)
+    myChart2.setOption(option)
 })
 
 

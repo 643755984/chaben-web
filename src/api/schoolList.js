@@ -1,9 +1,9 @@
 import request from '../request/request'
 
-export const searchSchool = (schoolName, pageNum, pageSize) => {
+export const searchSchool = (data) => {
   return request({
-      url: '/school/search',
+      url: '/school/list',
       method: 'get',
-      params: { schoolName, pageNum, pageSize }
+      params: data
   })
 }

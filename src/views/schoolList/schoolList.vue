@@ -16,12 +16,16 @@
 				:label="item.label"
 				:value="item.value"></el-option>
 			</el-select>
+			<input v-model="page.schoolName" class="search-input" placeholder="院校名称" />
+			<div class="btn" @click="searchSchoolFn">
+				<el-icon :size="20" color="#ffffff">
+					<search />
+				</el-icon>
+			</div>
 		</div>
 		<div class="main container">
-			<div class="no-data" v-if="page.list.length === 0">
-				找不到数据
-			</div>
-			<div class="school-list">
+			
+			<div class="school-list" v-if="page.list.length !== 0">
 				<div class="item" 
 				v-for="(item, index) in page.list" 
 				:key="index + 'school'"
@@ -38,7 +42,9 @@
 					</div>
 				</div>
 			</div>
-			
+			<div class="no-data" v-else>
+				抱歉，找不到该院校数据！
+			</div>
 		</div>
 		<div class="footer"  v-if="page.list.length !== 0">
 			<el-pagination layout="prev, pager, next" :total="page.total"></el-pagination>
@@ -46,7 +52,7 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import HeaderCb from '@/components/headerCb.vue'
 import Tag from '@/components/tag.vue'
@@ -61,23 +67,26 @@ const { setImgUrl } = setImgUrlSetup()
 let page = reactive({
 	schoolType: '',
 	schoolLevel: '',
+	schoolName: '',
 	list: [],
 	pageNum: 1,
 	pageSize: 10,
 	total: 0
 })
-let noData = ref(false)
 
 onMounted(() => {
-	searchSchool(route.query.schoolName, page.pageNum, page.pageSize).then(res => {
-		console.log(res)
+	page.schoolName = route.query.schoolName
+	searchSchoolFn()
+})
+
+const searchSchoolFn = () => {
+	searchSchool(page).then(res => {
 		if(res.code === 200) {
 			page.list = res.data.rows
 			page.total = res.data.count
-			noData.value = res.noData
 		}
 	})
-})
+}
 
 const changePage = (schoolId) => {
 	router.push({name: 'schoolDetail', query: { schoolId }})
@@ -86,8 +95,29 @@ const changePage = (schoolId) => {
 </script>
 <style lang="scss" scoped>
 .fillter {
+	display: flex;
 	padding: 18px 10px;
 	border-bottom: 1px solid $border-color;
+	.search-input {
+		margin: 0 10px 0 20px;
+		width: 240px;
+		border-radius: 25px;
+		border: 1px solid $border-color;
+		outline: none;
+		text-indent: 20px;
+		caret-color: $text-color-placeholder;
+    	color: $text-color;
+	}
+	.btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 46px;
+		flex-shrink: 0;
+		background: $theme-color;
+		border-radius: 8px;
+		cursor: pointer;
+	}
 }
 .main {
 	padding: 20px 10px 10px;
@@ -96,7 +126,6 @@ const changePage = (schoolId) => {
 		flex-wrap: wrap;
 		.item {
 			position: relative;
-			// margin: 0 10px 60px;
 			margin-right: 60px;
 			margin-bottom: 40px;
 			cursor: pointer;
@@ -145,7 +174,8 @@ const changePage = (schoolId) => {
 		}
 	}
 	.no-data {
-		font-size: 24px;
+		margin-top: 80px;
+		font-size: 30px;
 		font-weight: bold;
 		color: $text-color;
 		text-align: center;

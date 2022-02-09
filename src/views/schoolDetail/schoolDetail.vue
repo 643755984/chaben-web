@@ -24,18 +24,22 @@
     </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Tag from '@/components/tag.vue'
 import BaseInfo from './components/baseInfo.vue'
 import MajorInfo from './components/majorInfo.vue'
 import HeaderCb from '@/components/headerCb.vue'
 import schoolInfoSetup from '@/setup/schoolInfoSetup'
-import { getSchoolInfo, getSchoolMajorList, getNoticeList } from '@/api/schoolDetail'
+import majorListSetup from './setup/majorListSetup'
+import noticeListSetup from './setup/noticeListSetup'
+import { getSchoolInfo } from '@/api/schoolDetail'
 
 const route = useRoute()
-const { setSchoolType, setSchoolLevel } = schoolInfoSetup()
 const schoolId = route.query.schoolId
+const { setSchoolType, setSchoolLevel } = schoolInfoSetup()
+let { majorList } = majorListSetup(schoolId)
+let { noticeList } = noticeListSetup(schoolId)
 let schoolInfo = reactive({
     schoolId: "",
     schoolName: "",
@@ -45,13 +49,9 @@ let schoolInfo = reactive({
     schoolLogo: '',
     schoolEmail: ''
 })
-let majorList = ref([])
-let noticeList = ref([])
 
 onMounted(() => {
     getSchoolInfoFn()
-    getMajorlistFn()
-    getNoticeFn()
 })
 
 const getSchoolInfoFn = () => {
@@ -62,21 +62,6 @@ const getSchoolInfoFn = () => {
     })
 }
 
-const getMajorlistFn = () => {
-    getSchoolMajorList({ pageNum: 1, pageSize: 100, schoolId}).then(res => {
-        if(res.code === 200) {
-            majorList.value = res.data.rows
-        }
-    })
-}
-
-const getNoticeFn = () => {
-    getNoticeList({ pageNum: 1, pageSize: 4, schoolId}).then(res => {
-        if(res.code === 200) {
-            noticeList.value = res.data.rows
-        }
-    })
-}
 </script>
 <style lang="scss" scoped>
 .detail-page {
