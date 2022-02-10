@@ -64,6 +64,7 @@ class CbLineChart {
             series: []
         },
         this.chart = null
+        this.bindDom()
     }
     bindDom() {
         this.chart = echarts.init(this.dom)
@@ -75,7 +76,6 @@ class CbLineChart {
         this.chartOption.legend.data = chartData.legendData
         this.chartOption.xAxis.data = chartData.xAxisData
         this.initSeriesData(chartData)
-        console.log(this.chartOption)
         this.chart.setOption(this.chartOption, true)
     }
     initSeriesData(chartData) {

@@ -21,11 +21,13 @@ export default function useNav(schoolId) {
     let peopleChartRef = ref(null)
     let currentIndex = ref(0)
     let gradeChartObj = null
+    let peopleChartObj = null
 
 
     onMounted(async () => {
         gradeChartObj = new CbLineChart(gradeChartRef.value)
-        gradeChartObj.bindDom()
+        peopleChartObj = new CbLineChart(peopleChartRef.value)
+
         await getSchoolMajorlistFn()
         getMajorChartFn(majorList.value[0].majorInfo.id)
 
@@ -44,9 +46,9 @@ export default function useNav(schoolId) {
             let rows = res.data.rows
             setChartDataList(gradeChartData, rows, ['averageGrade', 'minGrade', 'passGrade'])
             gradeChartObj.init(gradeChartData)
-            // new CbLineChart(gradeChartRef.value, gradeChartData).init()
-            // setChartDataList(peopleChartData, rows, ['recruitNumberPeople', 'admitNumberPeople'])
-            // new CbLineChart(peopleChartRef.value, peopleChartData).init()
+
+            setChartDataList(peopleChartData, rows, ['recruitNumberPeople', 'admitNumberPeople'])
+            peopleChartObj.init(peopleChartData)
         })
     }
 
@@ -66,6 +68,7 @@ export default function useNav(schoolId) {
     }
 
     const selectMajor = (index, major) => {
+        if(index === currentIndex.value) return
         currentIndex.value = index
         getMajorChartFn(major.id)
     }
