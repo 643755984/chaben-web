@@ -26,3 +26,12 @@ export const getNoticeList = query => {
       params: query
   })
 }
+
+// 获取专业分数和人数
+export const getMajorChart = query => {
+  return request({
+      url: '/grade/list',
+      method: 'get',
+      params: query
+  })
+}

@@ -19,7 +19,35 @@
         </div>
         <div class="main container">
             <base-info :schoolInfo="schoolInfo" :noticeList="noticeList" />
-            <major-info :majorList="majorList" />
+            <!-- <major-info :schoolId="schoolId" /> -->
+            <CbCard style="margin-top: 24px;" title="专业信息">
+                <div class="charts-main">
+                    <div class="left-box">
+                        <div class="left-title">专业列表</div>
+                        <el-scrollbar height="740px">
+                            <div 
+                            v-for="(item, index) in majorList" 
+                            :key="index + 'major'" 
+                            class="major-list" 
+                            :class="index ===  currentIndex ? 'active' : ''"
+                            @click="selectMajor(index, item.majorInfo)"
+                            >
+                                {{ item.majorInfo.majorName}}
+                            </div>
+                        </el-scrollbar>
+                    </div>
+                    <div class="right-box">
+                        <div class="charts-item">
+                            <div class="title">近五年人数变化</div>
+                            <div class="charts" ref="peopleChartRef" style="width: 100%;height: 340px;"></div>
+                        </div>
+                        <div class="charts-item">
+                            <div class="title">近五年分数变化</div>
+                            <div class="charts" ref="gradeChartRef" style="width: 100%;height: 340px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </CbCard>
         </div>
     </div>
 </template>
@@ -28,17 +56,16 @@ import { reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Tag from '@/components/tag.vue'
 import BaseInfo from './components/baseInfo.vue'
-import MajorInfo from './components/majorInfo.vue'
 import HeaderCb from '@/components/headerCb.vue'
 import schoolInfoSetup from '@/setup/schoolInfoSetup'
-import majorListSetup from './setup/majorListSetup'
+import majorInfoSetup from './setup/majorInfoSetup'
 import noticeListSetup from './setup/noticeListSetup'
 import { getSchoolInfo } from '@/api/schoolDetail'
 
 const route = useRoute()
 const schoolId = route.query.schoolId
 const { setSchoolType, setSchoolLevel } = schoolInfoSetup()
-let { majorList } = majorListSetup(schoolId)
+let { majorList, currentIndex, gradeChartRef, peopleChartRef, selectMajor } = majorInfoSetup(schoolId)
 let { noticeList } = noticeListSetup(schoolId)
 let schoolInfo = reactive({
     schoolId: "",
@@ -101,6 +128,49 @@ const getSchoolInfoFn = () => {
     }
     .main {
         padding: 20px 0;
+        .charts-main {
+            display: flex;
+            .left-box {
+                width: 250px;
+                margin-right: 16px;
+                overflow: hidden;
+                border-right: 1px solid #e5e7eb;
+                .left-title {
+                    padding-left: 8px;
+                    margin-bottom: 18px;
+                    color: $text-color;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                .major-list {
+                    padding: 10px 12px;
+                    color: $text-color;
+                    cursor: pointer;
+                    &:hover {
+                        background: #fff;
+                    }
+                }
+                .active {
+                    color: $theme-color;
+                    background: #fff;
+                    border-radius: 6px;
+                    font-weight: bold;
+                }
+            }
+            .right-box {
+                flex: 1;
+                box-sizing: border-box;
+                .charts-item {
+                    // margin-bottom: 40px;
+                    .title {
+                        margin-bottom: 16px;
+                        text-align: center;
+                        color: $theme-color;
+                        font-weight: bolder;
+                    }
+                }
+            }
+        }
     }
 }
 </style>

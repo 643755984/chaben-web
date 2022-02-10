@@ -39,19 +39,12 @@ import {
     //   DatasetComponentOption,
     TransformComponent,
     TooltipComponent
-} from 'echarts/components';
+} from 'echarts/components'
 // 标签自动布局，全局过渡动画等特性
-import { LabelLayout, UniversalTransition } from 'echarts/features';
+import { LabelLayout, UniversalTransition } from 'echarts/features'
 // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
-import { CanvasRenderer } from 'echarts/renderers';
-
-let props = defineProps({
-    majorList: {
-        type: Array,
-        require: true
-    }
-})
-
+import { CanvasRenderer } from 'echarts/renderers'
+import { getMajorChart } from '@/api/schoolDetail'
 
 // 注册必须的组件
 echarts.use([
@@ -67,50 +60,61 @@ echarts.use([
     CanvasRenderer
 ]);
 
+let props = defineProps({
+    schoolId: {
+        type: Number,
+        require: true
+    }
+})
+
+
 let gradeChart = ref(null)
 let peopleChart = ref(null)
 
 onMounted(() => {
-    let myChart1 = echarts.init(gradeChart.value)
-    let myChart2 = echarts.init(peopleChart.value)
-    let option = {
-        legend: {
-            data: ['招生人数', '录取人数']
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-            name: '招生人数',
-            type: 'line',
-            stack: 'Total',
-            data: [120, 132, 101, 134, 90, 230, 210]
-            },
-            {
-            name: '录取人数',
-            type: 'line',
-            stack: 'Total',
-            data: [220, 182, 191, 234, 290, 330, 310]
-            }
-        ]
-    };
-    myChart1.setOption(option)
-    myChart2.setOption(option)
+    getMajorChart().then(res => {
+
+    })
+    // let myChart1 = echarts.init(gradeChart.value)
+    // let myChart2 = echarts.init(peopleChart.value)
+    // let option = {
+    //     legend: {
+    //         data: ['招生人数', '录取人数']
+    //     },
+    //     tooltip: {
+    //         trigger: 'axis'
+    //     },
+    //     grid: {
+    //         left: '3%',
+    //         right: '4%',
+    //         bottom: '3%',
+    //         containLabel: true
+    //     },
+    //     xAxis: {
+    //         type: 'category',
+    //         boundaryGap: false,
+    //         data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    //     },
+    //     yAxis: {
+    //         type: 'value'
+    //     },
+    //     series: [
+    //         {
+    //         name: '招生人数',
+    //         type: 'line',
+    //         // stack: 'Total',
+    //         data: [120, 132, 101, 134, 90, 230, 210]
+    //         },
+    //         {
+    //         name: '录取人数',
+    //         type: 'line',
+    //         // stack: 'Total',
+    //         data: [220, 182, 191, 234, 290, 330, 310]
+    //         }
+    //     ]
+    // };
+    // myChart1.setOption(option)
+    // myChart2.setOption(option)
 })
 
 
@@ -148,10 +152,9 @@ onMounted(() => {
     }
     .right-box {
         flex: 1;
-        padding: 0 60px;
         box-sizing: border-box;
         .charts-item {
-            margin-bottom: 16px;
+            margin-bottom: 40px;
             .title {
                 margin-bottom: 16px;
                 text-align: center;
